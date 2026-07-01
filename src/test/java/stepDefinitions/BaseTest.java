@@ -110,6 +110,7 @@ public class BaseTest {
 				}
 			}	
 		}
+		System.out.println("Scenario Row Number = " + scenarioRN);
 		excelData = excelDataReader(scenarioRN,value);
 		wb.close();
 		fis.close();
@@ -126,8 +127,11 @@ public class BaseTest {
 	}
 	
 	static String excelDataReader(int scenarioRow, String value) throws FileNotFoundException, IOException {
+		 datacn = 0;
+		 int datarn = 0; 
 		
-		int datarn = scenarioRow-1;
+		
+		//int datarn = scenarioRow - 1;
 		
 		String ExcelFile = BaseTest.configMethod("EXCELFILE");
 		String SheetName = BaseTest.configMethod("SheetName");
@@ -144,29 +148,49 @@ public class BaseTest {
 		Iterator<Row> ri= sheet.iterator();
 		
 //		int Scenario_rn;
-		while(ri.hasNext()){
-			Row row= ri.next();
-			Iterator<Cell> ci= row.iterator();
-			
-			while(ci.hasNext()){
-				
-				Cell cell= ci.next();
-				
-				if(datarn==row.getRowNum()) {
-					if(cell.getStringCellValue().equalsIgnoreCase(value)) {
-						datacn = cell.getColumnIndex();	
-					}
-				}
-				
-				if(scenarioRN==row.getRowNum() && datacn==cell.getColumnIndex()) {
-					
-						ValueToReturn = cell.getStringCellValue();
+		
+		while (ri.hasNext()) {
 
-				}
-				
-			}
-			
+		    Row row = ri.next();
+		    Iterator<Cell> ci = row.iterator();
+
+		    while (ci.hasNext()) {
+
+		        Cell cell = ci.next();
+
+		        if (datarn == row.getRowNum()) {
+
+		            String header = cell.getStringCellValue()
+		                    .replace("\n", "")
+		                    .replace("\r", "")
+		                    .trim();
+
+		            String search = value.trim();
+
+		            System.out.println("Header Found = [" + header + "]");
+
+		            if (header.equalsIgnoreCase(search)) {
+		                datacn = cell.getColumnIndex();
+		                System.out.println("Matched Header = " + header);
+		            }
+		        }
+
+		        // <<< YE CONDITION YAHI HONI CHAHIYE >>>
+		        if (scenarioRN == row.getRowNum() && datacn == cell.getColumnIndex()) {
+		            ValueToReturn = cell.getStringCellValue();
+		        }
+		    }
 		}
+		
+				
+
+				
+				
+			
+		
+		System.out.println("datacn = " + datacn);
+		System.out.println("value = " + value);
+		
 		if(datacn==0) {
 			System.out.println("No Test Data Found with Header as : "+value);
 		}
@@ -177,7 +201,6 @@ public class BaseTest {
 		}
 		return ValueToReturn;
 	}
-	
 	
 	public void TakeSS(String FileName) {
 		String projectPath = System.getProperty("user.dir");

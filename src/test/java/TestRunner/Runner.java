@@ -11,11 +11,11 @@ import io.cucumber.junit.CucumberOptions;
 @CucumberOptions(
 		features = "src//test//resources//Features",
 		glue={"stepDefinitions"},
-		tags = "@TC_01LoginFuctionality",
+		tags = "@TC_02BillGeneration_001",
 		dryRun=false,		
 		plugin= {"pretty", "html:target/cucumberReports/reports.html"},
 		monochrome = true
-		//tags = {'@Regression'}
+		//tags = {' @Regression'}
 			
 		)
 public class Runner {
